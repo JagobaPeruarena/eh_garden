@@ -57,5 +57,10 @@ public class arboles {
 	public arboles() {
 		
 	}
+	@Override
+	public String toString() {
+		return id + "," + nombreComun + "," + nombreCientifico + "," + habitat + "," + altura + "," + origen;
+	}
+	
 
 }
