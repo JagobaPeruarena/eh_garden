@@ -1,6 +1,7 @@
 package arbolees;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
@@ -33,32 +34,15 @@ public class gestorArboles {
 				break;
 			case OPCION_DOS:
 				System.out.println("La opcion de eliminar arbol");
-				System.out.println("Di la id del arbol que quieras eliminar");
-				numArbolD = Integer.parseInt(miTeclado.nextLine());
-				sent="DELETE FROM arboles WHERE id='"+numArbolD+"'";
-				st.execute(sent);
+				eliminarArboles(miTeclado, st);
 				break;
 			case OPCION_TRES:
 				System.out.println("La opcion de modificar informacion del arbol");
-				System.out.println("Di la id del arbol que quieras modificar");
-				numArbolD = Integer.parseInt(miTeclado.nextLine());
-				System.out.println("Di el factor a cambiar: nombre_comun,nombre_cientifico,habitat,altura,origen");
-				String factorC=miTeclado.nextLine().toLowerCase();
-				if (factorC.equals("altura")) {
-					System.out.println("Di la nueva altura");
-					int altC = Integer.parseInt(miTeclado.nextLine());
-					sent="UPDATE arboles SET "+factorC+"='"+altC+"' WHERE id="+numArbolD+"";
-				}else {
-					System.out.println("Di el nuevo atributo");
-					String atribC = miTeclado.nextLine();
-					sent="UPDATE arboles SET "+factorC+"='"+atribC+"' WHERE id="+numArbolD+"";
-				}
-				
-				st.executeUpdate(sent);
+				actualizarArboles(miTeclado, st);
 				break;
 			case OPCION_CUATRO:
 				System.out.println("La opcion de visualizar arboles");
-				
+				visualizarArboles(st);
 				break;
 				
 			case OPCION_SALIR:
@@ -71,6 +55,41 @@ public class gestorArboles {
 		}
 		miTeclado.close();
 		System.out.println("ADIOS");
+	}
+	private static void visualizarArboles(Statement st) throws SQLException {
+		String select="SELECT * FROM arboles ";
+		st.execute(select);
+		ResultSet resultado=st.executeQuery(select);
+		while(resultado.next()) {
+			System.out.println(resultado.getInt(1)+"-"+resultado.getString(2)+"-"+resultado.getString(3)+"-"+resultado.getString(4)+"-"+resultado.getInt(5)+"-"+resultado.getString(6));
+		}
+	}
+	private static void eliminarArboles(Scanner miTeclado, Statement st) throws SQLException {
+		int numArbolD;
+		String sent;
+		System.out.println("Di la id del arbol que quieras eliminar");
+		numArbolD = Integer.parseInt(miTeclado.nextLine());
+		sent="DELETE FROM arboles WHERE id='"+numArbolD+"'";
+		st.execute(sent);
+	}
+	private static void actualizarArboles(Scanner miTeclado, Statement st) throws SQLException {
+		int numArbolD;
+		String sent;
+		System.out.println("Di la id del arbol que quieras modificar");
+		numArbolD = Integer.parseInt(miTeclado.nextLine());
+		System.out.println("Di el factor a cambiar: nombre_comun,nombre_cientifico,habitat,altura,origen");
+		String factorC=miTeclado.nextLine().toLowerCase();
+		if (factorC.equals("altura")) {
+			System.out.println("Di la nueva altura");
+			int altC = Integer.parseInt(miTeclado.nextLine());
+			sent="UPDATE arboles SET "+factorC+"='"+altC+"' WHERE id="+numArbolD+"";
+		}else {
+			System.out.println("Di el nuevo atributo");
+			String atribC = miTeclado.nextLine();
+			sent="UPDATE arboles SET "+factorC+"='"+atribC+"' WHERE id="+numArbolD+"";
+		}
+		
+		st.executeUpdate(sent);
 	}
 	private static void insertar_arbol(Scanner miTeclado, Statement st) throws SQLException {
 		System.out.println("Di el nombre del arbol");
